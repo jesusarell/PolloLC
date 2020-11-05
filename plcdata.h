@@ -11,6 +11,10 @@ class PLCData : public QObject {
 public:
     PLCData();
     ~PLCData();
+    bool getBoolAt(byte position);
+    short getNumberAt(byte position);
+    void writeBoolAt(byte position, bool value);
+    void decrementNumberAt(byte position);
 
 private:
     //Cliente s7
@@ -27,7 +31,7 @@ private:
     const int TCaidaCaja = 750;
 
     //Capacidad en unidades
-    const short CapacidadMuelle = 10;
+    const short CapacidadMuelle = 3;
 
     //Tiempo entre actualizaciones de memoria en ms
     const int TEntreLecturas = 100;
