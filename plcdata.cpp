@@ -27,6 +27,8 @@ bool PLCData::getBoolAt(byte position) {
 short PLCData::getNumberAt(byte position) {
     return this->plc_number.at(position);
 }
+
+//TODO: mapear las direcciones de alguna forma mas bonica
 void PLCData::writeBoolAt(byte position, bool value) {
     if (position == 25) this->writeBit(4, 0, value);
     if (position == 26) this->writeBit(4, 1, value);
@@ -34,12 +36,6 @@ void PLCData::writeBoolAt(byte position, bool value) {
     if (position == 28) this->writeBit(4, 3, value);
 }
 void PLCData::decrementNumberAt(byte position) {
-//    byte* data = new byte[2];
-//    short value = this->plc_number.at(position) - 1;
-
-//    writeNumber(data, value, 0);
-//    Cli_MBWrite(this->client, ((int)position * 2) + 6, 2, data);
-
     if (position == 0) this->writeBit(49, 4, true);
     if (position == 1) this->writeBit(49, 5, true);
     if (position == 2) this->writeBit(49, 6, true);
@@ -123,6 +119,7 @@ inline void PLCData::swapInt(byte* data, int start_index) {
     data[start_index + 2] = tmp;
 }
 
+//Same TODO que antes
 void PLCData::updatePLCState(void) {
     byte* read_data = new byte[15];
     Cli_MBRead(client, 0, 15, read_data);

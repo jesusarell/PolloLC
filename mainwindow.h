@@ -41,15 +41,6 @@ private:
     QTimer* updateTimer;
     const int updateRate = 50;
 
-//    void setPLCInitState(void);
-//    void writeBit(int srcbyte, int bit, bool data);
-//    bool readBit(byte* data, int byte_index, int bit_number);
-//    inline void writeNumber(byte* container, int number, int offset);
-//    inline void writeNumber(byte* container, short number, int offset);
-//    inline short readShort(byte* container, int start_index);
-//    inline void swapShort(byte* data, int start_index);
-//    inline void swapInt(byte* data, int start_index);
-
 private slots:
     void updatePLCState(void);
     void knownLocationOnClick(void);
