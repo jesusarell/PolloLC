@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QTimer>
 
+//Capa de presentacion
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,11 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     , updateTimer(new QTimer(this))
 {
     ui->setupUi(this);
+    scad = new Scadata(plcd);
 
     connect(this->ui->knownLocationButton, SIGNAL(pressed()), this, SLOT(knownLocationOnClick()));
-    connect(this->ui->acceptNextM1, SIGNAL(pressed()), this, SLOT(acceptNextM1OnClick()));
-    connect(this->ui->acceptNextM2, SIGNAL(pressed()), this, SLOT(acceptNextM2OnClick()));
-    connect(this->ui->acceptNextM3, SIGNAL(pressed()), this, SLOT(acceptNextM3OnClick()));
     connect(this->ui->decrementM1, SIGNAL(pressed()), this, SLOT(decrementM1OnClick()));
     connect(this->ui->decrementM2, SIGNAL(pressed()), this, SLOT(decrementM2OnClick()));
     connect(this->ui->decrementM3, SIGNAL(pressed()), this, SLOT(decrementM3OnClick()));
@@ -30,10 +29,12 @@ MainWindow::~MainWindow()
 
 
 //TODO: Maybe mapear la direccion de memoria con la variable
-void MainWindow::knownLocationOnClick(void) { plcd->writeBoolAt(28, true); }
-void MainWindow::acceptNextM1OnClick(void) { plcd->writeBoolAt(25, true); }
-void MainWindow::acceptNextM2OnClick(void) { plcd->writeBoolAt(26, true); }
-void MainWindow::acceptNextM3OnClick(void) { plcd->writeBoolAt(27, true); }
+void MainWindow::knownLocationOnClick(void) {
+    //plcd->writeNumberAt(50, this->ui->NextBoxLocation->value());
+    //plcd->updateBoxLocation();
+    scad->tmp_onCheck();
+}
+
 void MainWindow::decrementM1OnClick(void) { plcd->decrementNumberAt(0); }
 void MainWindow::decrementM2OnClick(void) { plcd->decrementNumberAt(1); }
 void MainWindow::decrementM3OnClick(void) { plcd->decrementNumberAt(2); }

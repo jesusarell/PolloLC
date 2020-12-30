@@ -14,7 +14,9 @@ public:
     bool getBoolAt(byte position);
     short getNumberAt(byte position);
     void writeBoolAt(byte position, bool value);
+    void writeNumberAt(byte position, short value);
     void decrementNumberAt(byte position);
+    void updateBoxLocation(short position);
 
 private:
     //Cliente s7

@@ -6,6 +6,7 @@
 #include <snap7.h>
 #include "hexbits.h"
 #include "plcdata.h"
+#include "scadata.h"
 
 #define GLED_ON "background-color:rgb(0,255,0);border-radius:10;border:2px solid black"
 #define GLED_OFF "background-color:rgb(0,0,0);border-radius:10;border:2px solid rgb(0,255,0)"
@@ -28,6 +29,7 @@ private:
     Ui::MainWindow *ui;
     S7Object client;
     PLCData* plcd;
+    Scadata* scad;
 
     const int TCintas = 3000;
     const int TCinta0 = 500;
@@ -44,9 +46,9 @@ private:
 private slots:
     void updatePLCState(void);
     void knownLocationOnClick(void);
-    void acceptNextM1OnClick(void);
-    void acceptNextM2OnClick(void);
-    void acceptNextM3OnClick(void);
+//    void acceptNextM1OnClick(void);
+//    void acceptNextM2OnClick(void);
+//    void acceptNextM3OnClick(void);
     void decrementM1OnClick(void);
     void decrementM2OnClick(void);
     void decrementM3OnClick(void);

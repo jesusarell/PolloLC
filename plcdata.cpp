@@ -1,10 +1,12 @@
 #include "plcdata.h"
 #include "hexbits.h"
 
+//Capa de datos
+
 PLCData::PLCData() : lecturaTimer(new QTimer(this))
 {
-    client = Cli_Create();
-    Cli_ConnectTo(client, this->PLC_IP, 0, 0);
+//    client = Cli_Create();
+//    Cli_ConnectTo(client, this->PLC_IP, 0, 0);
 
     for (byte i = 0; i < 33; i++) {
         this->plc_bool.insert(std::make_pair(i, false));
@@ -15,7 +17,7 @@ PLCData::PLCData() : lecturaTimer(new QTimer(this))
     }
 
     this->setPLCInitState();
-    connect(lecturaTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
+    //connect(lecturaTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
     lecturaTimer->start(this->TEntreLecturas);
 }
 
@@ -35,11 +37,22 @@ void PLCData::writeBoolAt(byte position, bool value) {
     if (position == 27) this->writeBit(4, 2, value);
     if (position == 28) this->writeBit(4, 3, value);
 }
+void PLCData::writeNumberAt(byte position, short value) {
+    byte* data = new byte[2];
+    writeNumber(data, value, 0);
+    Cli_MBWrite(client, position, 2, data);
+    delete[] data;
+}
 void PLCData::decrementNumberAt(byte position) {
     if (position == 0) this->writeBit(49, 4, true);
     if (position == 1) this->writeBit(49, 5, true);
     if (position == 2) this->writeBit(49, 6, true);
     if (position == 3) this->writeBit(49, 7, true);
+}
+
+void PLCData::updateBoxLocation(short location) {
+    this->writeNumberAt(50, location);
+    this->writeBoolAt(28, true);
 }
 
 
@@ -79,7 +92,8 @@ void PLCData::setPLCInitState(void) {
     //Tiempo caida de cajas
     writeNumber(initData, this->TCaidaCaja, 42);
 
-    Cli_MBWrite(client, 0, 50, initData);
+    //Cli_MBWrite(client, 0, 50, initData);
+    delete[] initData;
 }
 
 inline void PLCData::writeNumber(byte* container, int number, int offset) {
@@ -162,8 +176,10 @@ void PLCData::updatePLCState(void) {
     this->plc_bool[31] = readBit(read_data, 4, 6);        //M3Lleno
     this->plc_bool[32] = readBit(read_data, 4, 7);        //MDLleno
 
-    this->plc_number[0] = readShort(read_data, 6);       //CajasM1
-    this->plc_number[1] = readShort(read_data, 8);       //CajasM2
+    this->plc_number[0] = readShort(read_data, 6);        //CajasM1
+    this->plc_number[1] = readShort(read_data, 8);        //CajasM2
     this->plc_number[2] = readShort(read_data, 10);       //CajasM3
     this->plc_number[3] = readShort(read_data, 12);       //CajasMD
+
+    delete[] read_data;
 }

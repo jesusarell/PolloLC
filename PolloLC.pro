@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,12 +11,15 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    plcdata.cpp
+    plcdata.cpp \
+    scadata.cpp
 
 HEADERS += \
     hexbits.h \
     mainwindow.h \
-    plcdata.h
+    packets.h \
+    plcdata.h \
+    scadata.h
 
 FORMS += \
     mainwindow.ui
