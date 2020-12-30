@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    packets.cpp \
     plcdata.cpp \
     scadata.cpp
 

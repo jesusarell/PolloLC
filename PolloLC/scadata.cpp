@@ -31,7 +31,7 @@ bool Scadata::shouldRequestPosition(void) {
 }
 
 void Scadata::requestNextPosition(void) {
-    socket.write(C2S_REQUEST_BOX_POSITION, C2S_REQUEST_BOX_POSITION_LEN);
+//    socket.write(C2S_REQUEST_BOX_POSITION, C2S_REQUEST_BOX_POSITION_LEN);
 }
 
 void Scadata::onReadyRead()

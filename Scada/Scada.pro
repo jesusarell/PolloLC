@@ -9,6 +9,8 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
+    packets.cpp \
+    packets.cpp \
     mainwindow.cpp
 
 HEADERS += \
