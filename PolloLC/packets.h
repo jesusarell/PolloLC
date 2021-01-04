@@ -2,16 +2,29 @@
 #define PACKETS_H
 #include "plcdata.h"
 
+const char C2S_BOOLS_TRAP_CODE = 0x00;
+const char C2S_SHORTS_TRAP_CODE = 0x01;
+const char C2S_BOX_POSITION_REQUEST_CODE = 0x02;
+const char S2C_BOX_POSITION_RESPONSE_CODE = 0x64;
 
 const int C2S_BOOLS_TRAP_LEN = 10;
 const int C2S_SHORTS_TRAP_LEN = 13;
 const int C2S_BOX_POSITION_REQUEST_LEN = 5;
 const int S2C_BOX_POSITION_RESPONSE_LEN = 7;
 
-void C2S_box_position_request(char* packet);
+char* craft_packet(char packet_code);
+
 void C2S_bools_trap(char* packet, PLCData* plcd);
 void C2S_shorts_trap(char* packet);
+void C2S_box_position_request(char* packet);
 void S2C_box_position_response(char* packet);
+
+char C2S_get_packet_code(char* packet);
+char S2C_get_packet_code(char* packet);
+
+void C2S_parse_bools_trap(char* packet, std::map<char, bool>* plc_bool);
+void C2S_parse_shorts_trap(char* packet, std::map<short, bool>* plc_number);
+short S2C_parse_box_position_response(char* packet);
 
 #endif // PACKETS_H
 

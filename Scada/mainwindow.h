@@ -21,8 +21,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QTcpServer  _server;
+    QTcpServer _server;
     QList<QTcpSocket*>  _sockets;
+
+    std::map<char, bool> plc_bool;
+    std::map<char, short> plc_number;
 
 public slots:
     void onNewConnection();

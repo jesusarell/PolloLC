@@ -10,12 +10,14 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     packets.cpp \
-    packets.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    plcdata.cpp
 
 HEADERS += \
+    hexbits.h \
     mainwindow.h \
-    packets.h
+    packets.h \
+    plcdata.h
 
 FORMS += \
     mainwindow.ui
@@ -24,3 +26,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+LIBS += -lsnap7

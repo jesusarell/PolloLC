@@ -9,6 +9,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    for (char i = 0; i < 33; i++) {
+        this->plc_bool.insert(std::make_pair(i, false));
+    }
+
+    for (char i = 0; i < 4; i++) {
+        this->plc_number.insert(std::make_pair(i, 0));
+    }
+
     _server.listen(QHostAddress::Any, SERVER_PORT);
     connect(&_server, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
 }
