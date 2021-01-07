@@ -14,14 +14,12 @@ class Scadata : public QObject {
 public:
     Scadata(PLCData* plcd);
     ~Scadata();
-    //void tmp_onCheck(void);
 
 private:
     PLCData* plcd;
     QTcpSocket socket;
 
     bool lastS0State;
-    QTimer* cajaCheckTimer;
 
 private slots:
     void onCheck(void);

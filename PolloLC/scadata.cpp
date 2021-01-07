@@ -3,11 +3,10 @@
 #include <iostream>
 #include "packets.h"
 
-Scadata::Scadata(PLCData* plcd_ptr) : cajaCheckTimer(new QTimer(this))
+Scadata::Scadata(PLCData* plcd_ptr)
 {
     plcd = plcd_ptr;
-    connect(cajaCheckTimer, SIGNAL(timeout()), this, SLOT(onCheck()));
-    cajaCheckTimer->start(100);
+    plcd->addOnRefreshCallback(std::bind(&Scadata::onCheck, this));
 
     socket.connectToHost(QHostAddress(SERVER_HOST), SERVER_PORT);
     connect(&socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
@@ -16,7 +15,6 @@ Scadata::Scadata(PLCData* plcd_ptr) : cajaCheckTimer(new QTimer(this))
 
 Scadata::~Scadata() {};
 
-//void Scadata::tmp_onCheck(void) { this->onCheck(); }
 void Scadata::onCheck(void) {
     if (this->shouldRequestPosition()) {
         requestNextPosition();
@@ -28,7 +26,6 @@ bool Scadata::shouldRequestPosition(void) {
     bool changedToTrue = (newS0State && (newS0State != this->lastS0State));
     this->lastS0State = newS0State;
     return changedToTrue;
-//    return true;
 }
 
 void Scadata::requestNextPosition(void) {
