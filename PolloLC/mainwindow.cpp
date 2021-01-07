@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , plcd(new PLCData())
-//    , updateTimer(new QTimer(this))
 {
     ui->setupUi(this);
     scad = new Scadata(plcd);
@@ -19,23 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->ui->decrementM2, SIGNAL(pressed()), this, SLOT(decrementM2OnClick()));
     connect(this->ui->decrementM3, SIGNAL(pressed()), this, SLOT(decrementM3OnClick()));
     connect(this->ui->decrementMD, SIGNAL(pressed()), this, SLOT(decrementMDOnClick()));
-
-//    connect(this->ui->knownLocationButton, SIGNAL(pressed()), this, SLOT(knownLocationOnClick()));
-//    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
-//    updateTimer->start(this->updateRate);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-//TODO: Borrar todo el callback y el boton de la UI
-//void MainWindow::knownLocationOnClick(void) {
-    //plcd->updateBoxLocation((short) this->ui->NextBoxLocation->value());
-    //scad->tmp_onCheck();
-//}
 
 void MainWindow::decrementM1OnClick(void) { plcd->decrementNumberAt(0); }
 void MainWindow::decrementM2OnClick(void) { plcd->decrementNumberAt(1); }
