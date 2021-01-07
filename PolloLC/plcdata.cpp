@@ -5,8 +5,8 @@
 
 PLCData::PLCData() : lecturaTimer(new QTimer(this))
 {
-//    client = Cli_Create();
-//    Cli_ConnectTo(client, this->PLC_IP, 0, 0);
+    client = Cli_Create();
+    Cli_ConnectTo(client, this->PLC_IP, 0, 0);
 
     for (byte i = 0; i < 33; i++) {
         this->plc_bool.insert(std::make_pair(i, false));
@@ -17,7 +17,7 @@ PLCData::PLCData() : lecturaTimer(new QTimer(this))
     }
 
     this->setPLCInitState();
-    //connect(lecturaTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
+    connect(lecturaTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
     lecturaTimer->start(this->TEntreLecturas);
 }
 
@@ -92,7 +92,7 @@ void PLCData::setPLCInitState(void) {
     //Tiempo caida de cajas
     writeNumber(initData, this->TCaidaCaja, 42);
 
-    //Cli_MBWrite(client, 0, 50, initData);
+    Cli_MBWrite(client, 0, 50, initData);
     delete[] initData;
 }
 
@@ -133,7 +133,6 @@ inline void PLCData::swapInt(byte* data, int start_index) {
     data[start_index + 2] = tmp;
 }
 
-//Same TODO que antes
 void PLCData::updatePLCState(void) {
     byte* read_data = new byte[15];
     Cli_MBRead(client, 0, 15, read_data);
@@ -182,4 +181,13 @@ void PLCData::updatePLCState(void) {
     this->plc_number[3] = readShort(read_data, 12);       //CajasMD
 
     delete[] read_data;
+
+    for (std::function<void(void)> onRefreshCallback : onRefresh) {
+        onRefreshCallback();
+    }
 }
+
+void PLCData::addOnRefreshCallback(std::function<void(void)> _onRefresh) {
+    this->onRefresh.push_back(_onRefresh);
+}
+

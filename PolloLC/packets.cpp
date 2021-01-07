@@ -5,11 +5,26 @@ char* craft_packet(char packet_code) {
     char* packet;
 
     switch (packet_code) {
-        case C2S_BOOLS_TRAP_CODE: packet = new char[C2S_BOOLS_TRAP_LEN];
-        case C2S_SHORTS_TRAP_CODE: packet = new char[C2S_SHORTS_TRAP_LEN];
-        case C2S_BOX_POSITION_REQUEST_CODE: packet = new char[C2S_BOX_POSITION_REQUEST_LEN];
-        case S2C_BOX_POSITION_RESPONSE_CODE: packet = new char[S2C_BOX_POSITION_RESPONSE_LEN];
-        default: throw "Unknown packet code";
+        case C2S_BOOLS_TRAP_CODE: {
+            packet = new char[C2S_BOOLS_TRAP_LEN];
+            break;
+        }
+        case C2S_SHORTS_TRAP_CODE: {
+            packet = new char[C2S_SHORTS_TRAP_LEN];
+            break;
+        }
+        case C2S_BOX_POSITION_REQUEST_CODE: {
+            packet = new char[C2S_BOX_POSITION_REQUEST_LEN];
+            break;
+        }
+        case S2C_BOX_POSITION_RESPONSE_CODE: {
+            packet = new char[S2C_BOX_POSITION_RESPONSE_LEN];
+            break;
+        }
+        default: {
+            throw "Unknown packet code";
+            break;
+         }
     }
 
     return packet;
@@ -17,7 +32,7 @@ char* craft_packet(char packet_code) {
 
 void C2S_bools_trap(char* packet, PLCData* plcd) {
     packet[0] = C2S_BOOLS_TRAP_CODE;
-    memcpy(packet + 1, &C2S_BOOLS_TRAP_LEN, sizeof(int));
+    memcpy(packet + 1, &C2S_BOOLS_TRAP_PAYLOAD_LEN, sizeof(int));
     packet[5] = 0x00 | (plcd->getBoolAt(0)  ? bitmap.at(0) : 0x00)
                      | (plcd->getBoolAt(20) ? bitmap.at(1) : 0x00);
 
@@ -50,7 +65,7 @@ void C2S_bools_trap(char* packet, PLCData* plcd) {
 
 void C2S_shorts_trap(char* packet, PLCData* plcd) {
     packet[0] = C2S_SHORTS_TRAP_CODE;
-    memcpy(packet + 1, &C2S_SHORTS_TRAP_LEN, sizeof(int));
+    memcpy(packet + 1, &C2S_SHORTS_TRAP_PAYLOAD_LEN, sizeof(int));
 
     short m1, m2, m3, m4;
     m1 = plcd->getNumberAt(0);
@@ -66,23 +81,23 @@ void C2S_shorts_trap(char* packet, PLCData* plcd) {
 
 void C2S_box_position_request(char* packet) {
     packet[0] = C2S_BOX_POSITION_REQUEST_CODE;
-    memcpy(packet + 1, &C2S_BOX_POSITION_REQUEST_LEN, sizeof(int));
+    memcpy(packet + 1, &C2S_BOX_POSITION_REQUEST_PAYLOAD_LEN, sizeof(int));
 }
 
-void S2C_box_position_response(char* packet, char dst) {
+void S2C_box_position_response(char* packet, short dst) {
     packet[0] = S2C_BOX_POSITION_RESPONSE_CODE;
-    memcpy(packet + 1, &S2C_BOX_POSITION_RESPONSE_LEN, sizeof(int));
-    packet[5] = dst;
+    memcpy(packet + 1, &S2C_BOX_POSITION_RESPONSE_PAYLOAD_LEN, sizeof(int));
+    memcpy(packet + 5, &dst, sizeof(short));
 }
 
-char C2S_get_packet_code(char* packet) {
+char C2S_get_packet_code(const char* packet) {
     return packet[0];
 }
-char S2C_get_packet_code(char* packet) {
+char S2C_get_packet_code(const char* packet) {
     return packet[0];
 }
 
-void C2S_parse_bools_trap(char* packet, std::map<char, bool>* plc_bool) {
+void C2S_parse_bools_trap(const char* packet, std::map<char, bool>* plc_bool) {
     (*plc_bool)[0]  = (packet[5] & bitmap.at(0)) == bitmap.at(0);
     (*plc_bool)[20] = (packet[5] & bitmap.at(1)) == bitmap.at(1);
 
@@ -113,7 +128,7 @@ void C2S_parse_bools_trap(char* packet, std::map<char, bool>* plc_bool) {
     (*plc_bool)[32] = (packet[9] & bitmap.at(6)) == bitmap.at(6);
 }
 
-void C2S_parse_shorts_trap(char* packet, std::map<short, bool>* plc_number) {
+void C2S_parse_shorts_trap(const char* packet, std::map<char, short>* plc_number) {
     /*
     short m1, m2, m3, m4;
 
@@ -134,13 +149,8 @@ void C2S_parse_shorts_trap(char* packet, std::map<short, bool>* plc_number) {
     memcpy(&((*plc_number)[3]), packet + 11, sizeof(short));
 }
 
-short S2C_parse_box_position_response(char* packet) {
-    int dst;
-    memcpy(&dst, packet + 5, sizeof(int));
-    return (short) dst;
+short S2C_parse_box_position_response(const char* packet) {
+    short dst;
+    memcpy(&dst, packet + 5, sizeof(short));
+    return dst;
 }
-
-
-
-
-

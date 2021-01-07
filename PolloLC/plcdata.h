@@ -4,6 +4,7 @@
 #include <snap7.h>
 #include <map>
 #include <QTimer>
+#include <functional>
 
 class PLCData : public QObject {
     Q_OBJECT
@@ -17,6 +18,7 @@ public:
     void writeNumberAt(byte position, short value);
     void decrementNumberAt(byte position);
     void updateBoxLocation(short position);
+    void addOnRefreshCallback(std::function<void(void)> _onRefresh);
 
 private:
     //Cliente s7
@@ -33,7 +35,7 @@ private:
     const int TCaidaCaja = 750;
 
     //Capacidad en unidades
-    const short CapacidadMuelle = 3;
+    const short CapacidadMuelle = 25;
 
     //Tiempo entre actualizaciones de memoria en ms
     const int TEntreLecturas = 100;
@@ -44,6 +46,9 @@ private:
 
     //Timer para desencadenar la lectura
     QTimer* lecturaTimer;
+
+    //Callback a ejecutar cuando se terminan de actualizar los datos
+    std::vector<std::function<void(void)>> onRefresh;
 
 private:
     void setPLCInitState(void);

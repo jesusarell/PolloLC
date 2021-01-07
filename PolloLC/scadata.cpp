@@ -7,6 +7,7 @@ Scadata::Scadata(PLCData* plcd_ptr) : cajaCheckTimer(new QTimer(this))
 {
     plcd = plcd_ptr;
     connect(cajaCheckTimer, SIGNAL(timeout()), this, SLOT(onCheck()));
+    cajaCheckTimer->start(100);
 
     socket.connectToHost(QHostAddress(SERVER_HOST), SERVER_PORT);
     connect(&socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
@@ -15,32 +16,48 @@ Scadata::Scadata(PLCData* plcd_ptr) : cajaCheckTimer(new QTimer(this))
 
 Scadata::~Scadata() {};
 
-void Scadata::tmp_onCheck(void) { this->onCheck(); }
+//void Scadata::tmp_onCheck(void) { this->onCheck(); }
 void Scadata::onCheck(void) {
-//    if (this->shouldRequestPosition()) {
+    if (this->shouldRequestPosition()) {
         requestNextPosition();
-//    }
+    }
 }
 
 bool Scadata::shouldRequestPosition(void) {
-//    bool newS0State = this->plcd->getBoolAt(0);
-//    bool should = (newS0State && (newS0State == this->lastS0State));
-//    this->lastS0State = newS0State;
-//    return should;
-    return true;
+    bool newS0State = this->plcd->getBoolAt(0);
+    bool changedToTrue = (newS0State && (newS0State != this->lastS0State));
+    this->lastS0State = newS0State;
+    return changedToTrue;
+//    return true;
 }
 
 void Scadata::requestNextPosition(void) {
-//    socket.write(C2S_REQUEST_BOX_POSITION, C2S_REQUEST_BOX_POSITION_LEN);
+    char* packet = craft_packet(C2S_BOX_POSITION_REQUEST_CODE);
+    C2S_box_position_request(packet);
+
+    socket.write(packet, C2S_BOX_POSITION_REQUEST_LEN);
+    socket.flush();
+
+    delete[] packet;
 }
 
 void Scadata::onReadyRead()
 {
-    QByteArray data = socket.readAll();
-    std::string msg = data.toStdString();
-    const char* msgg = msg.c_str();
+    std::string data = socket.readAll().toStdString();
+    const char* packet = data.c_str();
 
-    std::cout << "Received (" << strlen(msgg) << " bytes) : " << msgg << std::endl;
+    char packet_code = S2C_get_packet_code(packet);
+    switch (packet_code) {
+        case S2C_BOX_POSITION_RESPONSE_CODE: {
+            short box_dst = S2C_parse_box_position_response(packet);
+            if (box_dst <= 0) return;
 
-    //if (where_caja_response) plcd.updateBoxLocation(response.location);
+            plcd->updateBoxLocation(box_dst);
+            break;
+        }
+        default: {
+            std::cout << "Unknown packet code" << std::endl;
+            break;
+        }
+    }
 }

@@ -14,7 +14,7 @@ class Scadata : public QObject {
 public:
     Scadata(PLCData* plcd);
     ~Scadata();
-    void tmp_onCheck(void);
+    //void tmp_onCheck(void);
 
 private:
     PLCData* plcd;

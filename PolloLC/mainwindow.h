@@ -27,25 +27,16 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    S7Object client;
+//    S7Object client;
     PLCData* plcd;
     Scadata* scad;
 
-    const int TCintas = 3000;
-    const int TCinta0 = 500;
-    const short CapacidadMuelle = 10;
-    const int TiempoSalidaCilindro = 500;
-    const int TiempoRecogerCilindro = 500;
-    const int TiempoCaidaCaja = 500;
-    const int TPasarPorSensorMuelle = 500;
-    const int TPasarPorSensorCinta = 500;
-
-    QTimer* updateTimer;
-    const int updateRate = 50;
+//    QTimer* updateTimer;
+//    const int updateRate = 50;
 
 private slots:
     void updatePLCState(void);
-    void knownLocationOnClick(void);
+//    void knownLocationOnClick(void);
 //    void acceptNextM1OnClick(void);
 //    void acceptNextM2OnClick(void);
 //    void acceptNextM3OnClick(void);

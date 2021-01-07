@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "iostream"
+#include <iostream>
+#include "packets.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,6 +9,12 @@ MainWindow::MainWindow(QWidget *parent)
     , _server(this)
 {
     ui->setupUi(this);
+    this->readBoxDestinations(filename1, &(boxes[0].box_dst_len), &(boxes[0].box_dst));
+    this->readBoxDestinations(filename2, &(boxes[1].box_dst_len), &(boxes[1].box_dst));
+
+    for (int i = 0; i < boxes[0].box_dst_len; i++) {
+        std::cout << boxes[0].box_dst[i] << std::endl;
+    }
 
     for (char i = 0; i < 33; i++) {
         this->plc_bool.insert(std::make_pair(i, false));
@@ -47,16 +54,56 @@ void MainWindow::onSocketStateChanged(QAbstractSocket::SocketState socketState)
 void MainWindow::onReadyRead()
 {
     QTcpSocket* sender = static_cast<QTcpSocket*>(QObject::sender());
-    QByteArray data = sender->readAll();
-    std::string msg = data.toStdString();
-    const char* msgg = msg.c_str();
+    std::string data = sender->readAll().toStdString();
+    const char* packet = data.c_str();
 
-    std::cout << "Received (" << strlen(msgg) << " bytes) : " << msgg << std::endl;
+    char packet_code = C2S_get_packet_code(packet);
+    switch (packet_code) {
+        case C2S_BOOLS_TRAP_CODE: {
+            C2S_parse_bools_trap(packet, &plc_bool);
+            break;
+        }
+        case C2S_SHORTS_TRAP_CODE: {
+            C2S_parse_shorts_trap(packet, &plc_number);
+            break;
+        }
+        case C2S_BOX_POSITION_REQUEST_CODE: {
+            int clientIndex = _sockets.indexOf(sender);
+            BoxDst b = boxes[clientIndex];
 
-    const int response_len = 1;
-    char* response = new char[response_len];
-    for (int i = 0; i < response_len; i++) response[i] = (char) this->ui->spinBox->value();
-    sender->write(QByteArray::fromRawData(response, response_len));
+            short dst;
+            if (b.box_count >= b.box_dst_len) dst = -1;
+            else {
+                dst = (short) b.box_dst[b.box_count];
+                boxes[clientIndex].box_count++;
+            }
 
-    delete[] response;
+            char* response_packet = craft_packet(S2C_BOX_POSITION_RESPONSE_CODE);
+            S2C_box_position_response(response_packet, dst);
+
+            sender->write(response_packet, S2C_BOX_POSITION_RESPONSE_LEN);
+            sender->flush();
+
+            delete[] response_packet;
+            break;
+        }
+        default: {
+            std::cout << "Unknown packet code" << std::endl;
+            break;
+        }
+    }
+}
+
+void MainWindow::readBoxDestinations(const char* filename, short* box_dst_len, short** box_dst) {
+    FILE* fid = fopen(filename, "r");
+    char buf[16];
+
+    while (fgets(buf, sizeof(buf), fid) != NULL) (*box_dst_len)++;
+    std::fseek(fid, 0, SEEK_SET);
+
+    (*box_dst) = new short[*box_dst_len];
+    for (int i = 0; i < *box_dst_len; i++) {
+        fgets(buf, 16, fid);
+        sscanf(buf, "%hd\n", &((*box_dst)[i]));
+    }
 }

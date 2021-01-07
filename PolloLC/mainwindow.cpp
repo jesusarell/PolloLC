@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTimer>
+#include <functional>
 
 //Capa de presentacion
 
@@ -8,18 +9,20 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , plcd(new PLCData())
-    , updateTimer(new QTimer(this))
+//    , updateTimer(new QTimer(this))
 {
     ui->setupUi(this);
     scad = new Scadata(plcd);
+    plcd->addOnRefreshCallback(std::bind(&MainWindow::updatePLCState, this));
 
-    connect(this->ui->knownLocationButton, SIGNAL(pressed()), this, SLOT(knownLocationOnClick()));
     connect(this->ui->decrementM1, SIGNAL(pressed()), this, SLOT(decrementM1OnClick()));
     connect(this->ui->decrementM2, SIGNAL(pressed()), this, SLOT(decrementM2OnClick()));
     connect(this->ui->decrementM3, SIGNAL(pressed()), this, SLOT(decrementM3OnClick()));
     connect(this->ui->decrementMD, SIGNAL(pressed()), this, SLOT(decrementMDOnClick()));
-    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
-    updateTimer->start(this->updateRate);
+
+//    connect(this->ui->knownLocationButton, SIGNAL(pressed()), this, SLOT(knownLocationOnClick()));
+//    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
+//    updateTimer->start(this->updateRate);
 }
 
 MainWindow::~MainWindow()
@@ -28,12 +31,11 @@ MainWindow::~MainWindow()
 }
 
 
-//TODO: Maybe mapear la direccion de memoria con la variable
-void MainWindow::knownLocationOnClick(void) {
-    //plcd->writeNumberAt(50, this->ui->NextBoxLocation->value());
-    //plcd->updateBoxLocation();
-    scad->tmp_onCheck();
-}
+//TODO: Borrar todo el callback y el boton de la UI
+//void MainWindow::knownLocationOnClick(void) {
+    //plcd->updateBoxLocation((short) this->ui->NextBoxLocation->value());
+    //scad->tmp_onCheck();
+//}
 
 void MainWindow::decrementM1OnClick(void) { plcd->decrementNumberAt(0); }
 void MainWindow::decrementM2OnClick(void) { plcd->decrementNumberAt(1); }
