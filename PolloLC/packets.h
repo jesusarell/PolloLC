@@ -45,9 +45,9 @@ short S2C_parse_box_position_response(const char* packet);
     //  - enviar destino caja : code dec100 -> 0x64, len : 1
     //      - nº muelle destino
 
-//Leer el fichero con los destinos de las cajas y utilizarlo para responder
+    //Leer el fichero con los destinos de las cajas y utilizarlo para responder
 //Interfaz grafica
 //  Simular cajas moviendose --> ¡Jisus!
-//Deshacer hacks
-//Mapear las variables del pcl a algo mas tragable ?¿
-//Autentificacion y CIFRADO CON GILTZARRAPO
+
+//Mapear las variables del pcl a algo mas tragable --> Vic
+//Autentificacion y CIFRADO CON GILTZARRAPO --> Jisus

@@ -11,10 +11,13 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-struct BoxDst {
+struct EstadoNave {
     short box_dst_len = 0;  //Numero de lineas del fichero
     short* box_dst;         //Array con los valores
     short box_count = 0;    //Contador del numero de cajas ya enviadas
+
+    std::map<char, bool> plc_bool;      //Variables booleanas de los plcs
+    std::map<char, short> plc_number;   //Variables numericas de los plcs
 };
 
 class MainWindow : public QMainWindow
@@ -31,12 +34,12 @@ private:
     QTcpServer _server;
     QList<QTcpSocket*>  _sockets;
 
-    std::map<char, bool> plc_bool;
-    std::map<char, short> plc_number;
+//    std::map<char, bool> plc_bool;
+//    std::map<char, short> plc_number;
 
-    const char* filename1 = "../box_dst_1.txt";
-    const char* filename2 = "../box_dst_2.txt";
-    BoxDst boxes[2];
+    const int numNaves = 2;
+    const char* filenames[2] = {"../box_dst_1.txt", "../box_dst_2.txt"};
+    EstadoNave naves[2];
 
 public slots:
     void onNewConnection();

@@ -894,58 +894,6 @@ border:2px solid rgb(0,255,0)</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="knownLocationButton">
-      <property name="geometry">
-       <rect>
-        <x>910</x>
-        <y>20</y>
-        <width>89</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Se donde va</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="acceptNextM1">
-      <property name="geometry">
-       <rect>
-        <x>670</x>
-        <y>20</y>
-        <width>101</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Aceptar next</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="acceptNextM2">
-      <property name="geometry">
-       <rect>
-        <x>460</x>
-        <y>20</y>
-        <width>101</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Aceptar next</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="acceptNextM3">
-      <property name="geometry">
-       <rect>
-        <x>250</x>
-        <y>20</y>
-        <width>101</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Aceptar next</string>
-      </property>
-     </widget>
      <widget class="QFrame" name="MDLleno">
       <property name="geometry">
        <rect>
@@ -1092,16 +1040,6 @@ border:2px solid rgb(255,0,0)</string>
       </property>
       <property name="text">
        <string>restar</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="NextBoxLocation">
-      <property name="geometry">
-       <rect>
-        <x>910</x>
-        <y>50</y>
-        <width>91</width>
-        <height>31</height>
-       </rect>
       </property>
      </widget>
     </widget>

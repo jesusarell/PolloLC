@@ -9,19 +9,17 @@ MainWindow::MainWindow(QWidget *parent)
     , _server(this)
 {
     ui->setupUi(this);
-    this->readBoxDestinations(filename1, &(boxes[0].box_dst_len), &(boxes[0].box_dst));
-    this->readBoxDestinations(filename2, &(boxes[1].box_dst_len), &(boxes[1].box_dst));
 
-    for (int i = 0; i < boxes[0].box_dst_len; i++) {
-        std::cout << boxes[0].box_dst[i] << std::endl;
-    }
+    for (int i = 0; i < numNaves; i++) {
+        this->readBoxDestinations(filenames[i], &(naves[i].box_dst_len), &(naves[i].box_dst));
 
-    for (char i = 0; i < 33; i++) {
-        this->plc_bool.insert(std::make_pair(i, false));
-    }
+       for (char j = 0; j < 33; j++) {
+            naves[i].plc_bool.insert(std::make_pair(j, false));
+        }
 
-    for (char i = 0; i < 4; i++) {
-        this->plc_number.insert(std::make_pair(i, 0));
+        for (char j = 0; j < 4; j++) {
+            naves[i].plc_number.insert(std::make_pair(j, 0));
+        }
     }
 
     _server.listen(QHostAddress::Any, SERVER_PORT);
@@ -54,28 +52,29 @@ void MainWindow::onSocketStateChanged(QAbstractSocket::SocketState socketState)
 void MainWindow::onReadyRead()
 {
     QTcpSocket* sender = static_cast<QTcpSocket*>(QObject::sender());
+    int clientIndex = _sockets.indexOf(sender);
+
     std::string data = sender->readAll().toStdString();
     const char* packet = data.c_str();
 
     char packet_code = C2S_get_packet_code(packet);
     switch (packet_code) {
         case C2S_BOOLS_TRAP_CODE: {
-            C2S_parse_bools_trap(packet, &plc_bool);
+            C2S_parse_bools_trap(packet, &(naves[clientIndex].plc_bool));
             break;
         }
         case C2S_SHORTS_TRAP_CODE: {
-            C2S_parse_shorts_trap(packet, &plc_number);
+            C2S_parse_shorts_trap(packet, &(naves[clientIndex].plc_number));
             break;
         }
         case C2S_BOX_POSITION_REQUEST_CODE: {
-            int clientIndex = _sockets.indexOf(sender);
-            BoxDst b = boxes[clientIndex];
+            EstadoNave enave = naves[clientIndex];
 
             short dst;
-            if (b.box_count >= b.box_dst_len) dst = -1;
+            if (enave.box_count >= enave.box_dst_len) dst = -1;
             else {
-                dst = (short) b.box_dst[b.box_count];
-                boxes[clientIndex].box_count++;
+                dst = (short) enave.box_dst[enave.box_count];
+                naves[clientIndex].box_count++;
             }
 
             char* response_packet = craft_packet(S2C_BOX_POSITION_RESPONSE_CODE);
