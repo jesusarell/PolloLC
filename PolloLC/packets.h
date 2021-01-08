@@ -20,7 +20,7 @@ const int S2C_BOX_POSITION_RESPONSE_LEN = S2C_BOX_POSITION_RESPONSE_PAYLOAD_LEN 
 char* craft_packet(char packet_code);
 
 void C2S_bools_trap(char* packet, PLCData* plcd);
-void C2S_shorts_trap(char* packet);
+void C2S_shorts_trap(char* packet, PLCData* plcd);
 void C2S_box_position_request(char* packet);
 void S2C_box_position_response(char* packet, short dst);
 

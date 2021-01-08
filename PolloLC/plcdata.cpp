@@ -18,7 +18,7 @@ PLCData::PLCData() : lecturaTimer(new QTimer(this))
 
     this->setPLCInitState();
     connect(lecturaTimer, SIGNAL(timeout()), this, SLOT(updatePLCState()));
-    lecturaTimer->start(this->TEntreLecturas);
+    lecturaTimer->start(PLCData::TEntreLecturas);
 }
 
 PLCData::~PLCData() {};
@@ -40,7 +40,7 @@ void PLCData::writeBoolAt(byte position, bool value) {
 void PLCData::writeNumberAt(byte position, short value) {
     byte* data = new byte[2];
     writeNumber(data, value, 0);
-    Cli_MBWrite(client, position, 2, data);
+        //Cli_MBWrite(client, position, 2, data);
     delete[] data;
 }
 void PLCData::decrementNumberAt(byte position) {
@@ -71,28 +71,28 @@ void PLCData::setPLCInitState(void) {
     //Muelles llenos -> a 0 -> Nothing to do
     //Contador de cajas por muelle -> a 0 -> Nothing to do
     //Capacidad de los muelles
-    writeNumber(initData, this->CapacidadMuelle, 16);
+    writeNumber(initData, PLCData::CapacidadMuelle, 16);
 
     //Tiempos que tardan las cajas en pasar por los sensores
     //  Tiempos de los muelles
-    writeNumber(initData, this->TSensorMuelle, 18);
+    writeNumber(initData, PLCData::TSensorMuelle, 18);
     //  Tiempos de las cintas
-    writeNumber(initData, this->TSensorCinta, 22);
+    writeNumber(initData, PLCData::TSensorCinta, 22);
     //  Tiempo en cinta 0
-    writeNumber(initData, this->TCinta0, 26);
+    writeNumber(initData, PLCData::TCinta0, 26);
     //  Tiempo en cintas largas
-    writeNumber(initData, this->TCintas, 30);
+    writeNumber(initData, PLCData::TCintas, 30);
 
     //Tiempos de los cilindros
     //  Tiempo en salir
-    writeNumber(initData, this->TSalidaCilindro, 34);
+    writeNumber(initData, PLCData::TSalidaCilindro, 34);
     //  Tiempo en volver
-    writeNumber(initData, this->TRecogerCilindro, 38);
+    writeNumber(initData, PLCData::TRecogerCilindro, 38);
 
     //Tiempo caida de cajas
-    writeNumber(initData, this->TCaidaCaja, 42);
+    writeNumber(initData, PLCData::TCaidaCaja, 42);
 
-    Cli_MBWrite(client, 0, 50, initData);
+        //Cli_MBWrite(client, 0, 50, initData);
     delete[] initData;
 }
 
@@ -105,7 +105,7 @@ inline void PLCData::writeNumber(byte* container, short number, int offset) {
     swapShort(container, offset);
 }
 inline void PLCData::writeBit(int srcbyte, int bit, bool on) {
-    Cli_WriteArea(client, (int)S7AreaMK, 0, 8*srcbyte + bit, 1, S7WLBit, &on);
+    //Cli_WriteArea(client, (int)S7AreaMK, 0, 8*srcbyte + bit, 1, S7WLBit, &on);
 }
 
 inline short PLCData::readShort(byte* container, int start_index) {

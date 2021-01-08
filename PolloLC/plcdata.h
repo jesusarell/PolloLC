@@ -20,25 +20,25 @@ public:
     void updateBoxLocation(short position);
     void addOnRefreshCallback(std::function<void(void)> _onRefresh);
 
+    //Tiempos en ms
+    static const int TSensorMuelle = 750;
+    static const int TSensorCinta = 750;
+    static const int TCinta0 = 500;
+    static const int TCintas = 1500;
+    static const int TSalidaCilindro = 500;
+    static const int TRecogerCilindro = 500;
+    static const int TCaidaCaja = 750;
+
+    //Capacidad en unidades
+    static const short CapacidadMuelle = 25;
+
+    //Tiempo entre actualizaciones de memoria en ms
+    static const int TEntreLecturas = 100;
+
 private:
     //Cliente s7
     S7Object client;
     const char* PLC_IP = "172.18.67.99";
-
-    //Tiempos en ms
-    const int TSensorMuelle = 750;
-    const int TSensorCinta = 750;
-    const int TCinta0 = 500;
-    const int TCintas = 1500;
-    const int TSalidaCilindro = 500;
-    const int TRecogerCilindro = 500;
-    const int TCaidaCaja = 750;
-
-    //Capacidad en unidades
-    const short CapacidadMuelle = 25;
-
-    //Tiempo entre actualizaciones de memoria en ms
-    const int TEntreLecturas = 100;
 
     //Diccionarios para almacenamiento de datos
     std::map<byte, bool> plc_bool;

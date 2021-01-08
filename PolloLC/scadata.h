@@ -21,6 +21,8 @@ private:
 
     bool lastS0State;
 
+    void sendTraps(void);
+
 private slots:
     void onCheck(void);
     bool shouldRequestPosition(void);

@@ -19,13 +19,16 @@ void Scadata::onCheck(void) {
     if (this->shouldRequestPosition()) {
         requestNextPosition();
     }
+
+    this->sendTraps();
 }
 
 bool Scadata::shouldRequestPosition(void) {
     bool newS0State = this->plcd->getBoolAt(0);
     bool changedToTrue = (newS0State && (newS0State != this->lastS0State));
     this->lastS0State = newS0State;
-    return changedToTrue;
+//    return changedToTrue;
+    return true;
 }
 
 void Scadata::requestNextPosition(void) {
@@ -36,6 +39,21 @@ void Scadata::requestNextPosition(void) {
     socket.flush();
 
     delete[] packet;
+}
+
+void Scadata::sendTraps() {
+    char* bool_trap = craft_packet(C2S_BOOLS_TRAP_CODE);
+    C2S_bools_trap(bool_trap, this->plcd);
+
+    char* short_trap = craft_packet(C2S_SHORTS_TRAP_CODE);
+    C2S_shorts_trap(short_trap, this->plcd);
+
+    socket.write(bool_trap, C2S_BOOLS_TRAP_LEN);
+    socket.flush();
+    socket.write(short_trap, C2S_SHORTS_TRAP_LEN);
+    socket.flush();
+
+    delete[] bool_trap;
 }
 
 void Scadata::onReadyRead()
