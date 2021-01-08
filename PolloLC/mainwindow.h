@@ -33,6 +33,9 @@ private:
 
 private slots:
     void updatePLCState(void);
+    void update_UI_1(void);
+    void update_UI_2(void);
+
     void decrementM1OnClick(void);
     void decrementM2OnClick(void);
     void decrementM3OnClick(void);

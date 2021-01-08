@@ -73,7 +73,7 @@ void MainWindow::onReadyRead()
             short dst;
             if (enave.box_count >= enave.box_dst_len) dst = -1;
             else {
-                dst = (short) enave.box_dst[enave.box_count];
+                dst = enave.box_dst[enave.box_count];
                 naves[clientIndex].box_count++;
             }
 

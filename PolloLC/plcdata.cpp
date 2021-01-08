@@ -135,7 +135,7 @@ inline void PLCData::swapInt(byte* data, int start_index) {
 
 void PLCData::updatePLCState(void) {
     byte* read_data = new byte[15];
-    Cli_MBRead(client, 0, 15, read_data);
+    //Cli_MBRead(client, 0, 15, read_data);
 
     //Sensores de cintas y muelles
     this->plc_bool[0] = readBit(read_data, 0, 0);        //S0

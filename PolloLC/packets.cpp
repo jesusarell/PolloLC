@@ -33,34 +33,37 @@ char* craft_packet(char packet_code) {
 void C2S_bools_trap(char* packet, PLCData* plcd) {
     packet[0] = C2S_BOOLS_TRAP_CODE;
     memcpy(packet + 1, &C2S_BOOLS_TRAP_PAYLOAD_LEN, sizeof(int));
-    packet[5] = 0x00 | (plcd->getBoolAt(0)  ? bitmap.at(0) : 0x00)
-                     | (plcd->getBoolAt(20) ? bitmap.at(1) : 0x00);
 
-    packet[6] = 0x00 | (plcd->getBoolAt(1)  ? bitmap.at(0) : 0x00)
-                     | (plcd->getBoolAt(21) ? bitmap.at(1) : 0x00)
-                     | (plcd->getBoolAt(8)  ? bitmap.at(2) : 0x00)
-                     | (plcd->getBoolAt(11) ? bitmap.at(3) : 0x00)
-                     | (plcd->getBoolAt(14) ? bitmap.at(4) : 0x00)
-                     | (plcd->getBoolAt(17) ? bitmap.at(5) : 0x00)
-                     | (plcd->getBoolAt(29) ? bitmap.at(6) : 0x00);
+    packet[5] =  0x00 | (plcd->getBoolAt(20) ? bitmap.at(1) : 0x00);
 
-    packet[7] = 0x00 | (plcd->getBoolAt(2)  ? bitmap.at(0) : 0x00)
-                     | (plcd->getBoolAt(22) ? bitmap.at(1) : 0x00)
-                     | (plcd->getBoolAt(9)  ? bitmap.at(2) : 0x00)
-                     | (plcd->getBoolAt(12) ? bitmap.at(3) : 0x00)
-                     | (plcd->getBoolAt(15) ? bitmap.at(4) : 0x00)
-                     | (plcd->getBoolAt(18) ? bitmap.at(5) : 0x00)
-                     | (plcd->getBoolAt(30) ? bitmap.at(6) : 0x00);
+    packet[6] =  0x00 | (plcd->getBoolAt(0)  ? bitmap.at(0) : 0x00)
+                      | (plcd->getBoolAt(21) ? bitmap.at(1) : 0x00);
 
-    packet[8] = 0x00 | (plcd->getBoolAt(3)  ? bitmap.at(0) : 0x00)
-                     | (plcd->getBoolAt(23) ? bitmap.at(1) : 0x00)
-                     | (plcd->getBoolAt(10) ? bitmap.at(2) : 0x00)
-                     | (plcd->getBoolAt(13) ? bitmap.at(3) : 0x00)
-                     | (plcd->getBoolAt(16) ? bitmap.at(4) : 0x00)
-                     | (plcd->getBoolAt(19) ? bitmap.at(5) : 0x00)
-                     | (plcd->getBoolAt(31) ? bitmap.at(6) : 0x00);
+    packet[7] =  0x00 | (plcd->getBoolAt(1)  ? bitmap.at(0) : 0x00)
+                      | (plcd->getBoolAt(22) ? bitmap.at(1) : 0x00)
+                      | (plcd->getBoolAt(8)  ? bitmap.at(2) : 0x00)
+                      | (plcd->getBoolAt(11) ? bitmap.at(3) : 0x00)
+                      | (plcd->getBoolAt(14) ? bitmap.at(4) : 0x00)
+                      | (plcd->getBoolAt(17) ? bitmap.at(5) : 0x00)
+                      | (plcd->getBoolAt(4)  ? bitmap.at(6) : 0x00);
 
-    packet[9] = 0x00 | (plcd->getBoolAt(32) ? bitmap.at(6) : 0x00);
+    packet[8] =  0x00 | (plcd->getBoolAt(2)  ? bitmap.at(0) : 0x00)
+                      | (plcd->getBoolAt(23) ? bitmap.at(1) : 0x00)
+                      | (plcd->getBoolAt(9)  ? bitmap.at(2) : 0x00)
+                      | (plcd->getBoolAt(12) ? bitmap.at(3) : 0x00)
+                      | (plcd->getBoolAt(15) ? bitmap.at(4) : 0x00)
+                      | (plcd->getBoolAt(18) ? bitmap.at(5) : 0x00)
+                      | (plcd->getBoolAt(5)  ? bitmap.at(6) : 0x00);
+
+    packet[9] =  0x00 | (plcd->getBoolAt(3)  ? bitmap.at(0) : 0x00)
+                      | (plcd->getBoolAt(24) ? bitmap.at(1) : 0x00)
+                      | (plcd->getBoolAt(10) ? bitmap.at(2) : 0x00)
+                      | (plcd->getBoolAt(13) ? bitmap.at(3) : 0x00)
+                      | (plcd->getBoolAt(16) ? bitmap.at(4) : 0x00)
+                      | (plcd->getBoolAt(19) ? bitmap.at(5) : 0x00)
+                      | (plcd->getBoolAt(6)  ? bitmap.at(6) : 0x00);
+
+    packet[10] = 0x00 | (plcd->getBoolAt(7)  ? bitmap.at(6) : 0x00);
 }
 
 void C2S_shorts_trap(char* packet, PLCData* plcd) {
@@ -98,34 +101,36 @@ char S2C_get_packet_code(const char* packet) {
 }
 
 void C2S_parse_bools_trap(const char* packet, std::map<char, bool>* plc_bool) {
-    (*plc_bool)[0]  = (packet[5] & bitmap.at(0)) == bitmap.at(0);
-    (*plc_bool)[20] = (packet[5] & bitmap.at(1)) == bitmap.at(1);
+    (*plc_bool)[20] = (packet[5]  & bitmap.at(1)) == bitmap.at(1);
 
-    (*plc_bool)[1]  = (packet[6] & bitmap.at(0)) == bitmap.at(0);
-    (*plc_bool)[21] = (packet[6] & bitmap.at(1)) == bitmap.at(1);
-    (*plc_bool)[8]  = (packet[6] & bitmap.at(2)) == bitmap.at(2);
-    (*plc_bool)[11] = (packet[6] & bitmap.at(3)) == bitmap.at(3);
-    (*plc_bool)[14] = (packet[6] & bitmap.at(4)) == bitmap.at(4);
-    (*plc_bool)[17] = (packet[6] & bitmap.at(5)) == bitmap.at(5);
-    (*plc_bool)[29] = (packet[6] & bitmap.at(6)) == bitmap.at(6);
+    (*plc_bool)[0]  = (packet[6]  & bitmap.at(0)) == bitmap.at(0);
+    (*plc_bool)[21] = (packet[6]  & bitmap.at(1)) == bitmap.at(1);
 
-    (*plc_bool)[2]  = (packet[7] & bitmap.at(0)) == bitmap.at(0);
-    (*plc_bool)[22] = (packet[7] & bitmap.at(1)) == bitmap.at(1);
-    (*plc_bool)[9]  = (packet[7] & bitmap.at(2)) == bitmap.at(2);
-    (*plc_bool)[12] = (packet[7] & bitmap.at(3)) == bitmap.at(3);
-    (*plc_bool)[15] = (packet[7] & bitmap.at(4)) == bitmap.at(4);
-    (*plc_bool)[18] = (packet[7] & bitmap.at(5)) == bitmap.at(5);
-    (*plc_bool)[30] = (packet[7] & bitmap.at(6)) == bitmap.at(6);
+    (*plc_bool)[1]  = (packet[7]  & bitmap.at(0)) == bitmap.at(0);
+    (*plc_bool)[22] = (packet[7]  & bitmap.at(1)) == bitmap.at(1);
+    (*plc_bool)[8]  = (packet[7]  & bitmap.at(2)) == bitmap.at(2);
+    (*plc_bool)[11] = (packet[7]  & bitmap.at(3)) == bitmap.at(3);
+    (*plc_bool)[14] = (packet[7]  & bitmap.at(4)) == bitmap.at(4);
+    (*plc_bool)[17] = (packet[7]  & bitmap.at(5)) == bitmap.at(5);
+    (*plc_bool)[4]  = (packet[7]  & bitmap.at(6)) == bitmap.at(6);
 
-    (*plc_bool)[3]  = (packet[8] & bitmap.at(0)) == bitmap.at(0);
-    (*plc_bool)[23] = (packet[8] & bitmap.at(1)) == bitmap.at(1);
-    (*plc_bool)[10] = (packet[8] & bitmap.at(2)) == bitmap.at(2);
-    (*plc_bool)[13] = (packet[8] & bitmap.at(3)) == bitmap.at(3);
-    (*plc_bool)[16] = (packet[8] & bitmap.at(4)) == bitmap.at(4);
-    (*plc_bool)[19] = (packet[8] & bitmap.at(5)) == bitmap.at(5);
-    (*plc_bool)[31] = (packet[8] & bitmap.at(6)) == bitmap.at(6);
+    (*plc_bool)[2]  = (packet[8]  & bitmap.at(0)) == bitmap.at(0);
+    (*plc_bool)[23] = (packet[8]  & bitmap.at(1)) == bitmap.at(1);
+    (*plc_bool)[9]  = (packet[8]  & bitmap.at(2)) == bitmap.at(2);
+    (*plc_bool)[12] = (packet[8]  & bitmap.at(3)) == bitmap.at(3);
+    (*plc_bool)[15] = (packet[8]  & bitmap.at(4)) == bitmap.at(4);
+    (*plc_bool)[18] = (packet[8]  & bitmap.at(5)) == bitmap.at(5);
+    (*plc_bool)[5]  = (packet[8]  & bitmap.at(6)) == bitmap.at(6);
 
-    (*plc_bool)[32] = (packet[9] & bitmap.at(6)) == bitmap.at(6);
+    (*plc_bool)[3]  = (packet[9]  & bitmap.at(0)) == bitmap.at(0);
+    (*plc_bool)[24] = (packet[9]  & bitmap.at(1)) == bitmap.at(1);
+    (*plc_bool)[10] = (packet[9]  & bitmap.at(2)) == bitmap.at(2);
+    (*plc_bool)[13] = (packet[9]  & bitmap.at(3)) == bitmap.at(3);
+    (*plc_bool)[16] = (packet[9]  & bitmap.at(4)) == bitmap.at(4);
+    (*plc_bool)[19] = (packet[9]  & bitmap.at(5)) == bitmap.at(5);
+    (*plc_bool)[6]  = (packet[9]  & bitmap.at(6)) == bitmap.at(6);
+
+    (*plc_bool)[7]  = (packet[10] & bitmap.at(6)) == bitmap.at(6);
 }
 
 void C2S_parse_shorts_trap(const char* packet, std::map<char, short>* plc_number) {

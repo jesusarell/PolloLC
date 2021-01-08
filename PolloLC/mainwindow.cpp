@@ -30,8 +30,12 @@ void MainWindow::decrementM2OnClick(void) { plcd->decrementNumberAt(1); }
 void MainWindow::decrementM3OnClick(void) { plcd->decrementNumberAt(2); }
 void MainWindow::decrementMDOnClick(void) { plcd->decrementNumberAt(3); }
 
-//Same TODO que en la de arriba
 void MainWindow::updatePLCState(void) {
+    this->update_UI_1();
+    this->update_UI_2();
+}
+
+void MainWindow::update_UI_1(void) {
     this->ui->S0->setStyleSheet(plcd->getBoolAt(0) ? GLED_ON : GLED_OFF);
     this->ui->S1cinta->setStyleSheet(plcd->getBoolAt(1) ? GLED_ON : GLED_OFF);
     this->ui->S2cinta->setStyleSheet(plcd->getBoolAt(2) ? GLED_ON : GLED_OFF);
@@ -73,4 +77,7 @@ void MainWindow::updatePLCState(void) {
     this->ui->CajasMuelle2->setText(QString::number(plcd->getNumberAt(1)));
     this->ui->CajasMuelle3->setText(QString::number(plcd->getNumberAt(2)));
     this->ui->CajasMuelleD->setText(QString::number(plcd->getNumberAt(3)));
+}
+
+void MainWindow::update_UI_2(void) {
 }

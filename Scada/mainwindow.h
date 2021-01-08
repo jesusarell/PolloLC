@@ -34,9 +34,6 @@ private:
     QTcpServer _server;
     QList<QTcpSocket*>  _sockets;
 
-//    std::map<char, bool> plc_bool;
-//    std::map<char, short> plc_number;
-
     const int numNaves = 2;
     const char* filenames[2] = {"../box_dst_1.txt", "../box_dst_2.txt"};
     EstadoNave naves[2];
