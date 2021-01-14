@@ -30,7 +30,7 @@ public:
     static const int TCaidaCaja = 750;
 
     //Capacidad en unidades
-    static const short CapacidadMuelle = 25;
+    static const short CapacidadMuelle = 2;
 
     //Tiempo entre actualizaciones de memoria en ms
     static const int TEntreLecturas = 100;

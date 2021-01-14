@@ -38,7 +38,7 @@ short S2C_parse_box_position_response(const char* packet);
     //Paquetes del protocolo
     // Header : 1byte code, 4 byte len, payload
     //  - estado bools : code 0x00, len n
-    //      - Scinta, Motor, Cilindros (Empujando, Retrocediendo, Fuera, Dentro), Smuelle
+    //      - Scinta, Motor, Cilindros (Empujando, Retrocediendo, Fuera, Dentro), Smuelle, X
     //  - estado muelles : code 0x01, len 2 * 4 = 8
     //      - muelle1, muelle2, muelle3, muelle4
     //  - request box position : code 0x02, len 0

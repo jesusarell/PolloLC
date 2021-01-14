@@ -10,12 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     PLC_constants[0].TSensorMuelle = 750;       PLC_constants[1].TSensorMuelle = 750;
     PLC_constants[0].TSensorCinta = 750;        PLC_constants[1].TSensorCinta = 750;
-    PLC_constants[0].TCinta0 = 500;             PLC_constants[1].TCinta0 = 500;
-    PLC_constants[0].TCintas = 1500;            PLC_constants[1].TCintas = 1500;
+    PLC_constants[0].TCinta0 = 500;             PLC_constants[1].TCinta0 = 3000;
+    PLC_constants[0].TCintas = 1500;            PLC_constants[1].TCintas = 2000;
     PLC_constants[0].TSalidaCilindro = 500;     PLC_constants[1].TSalidaCilindro = 500;
     PLC_constants[0].TRecogerCilindro = 500;    PLC_constants[1].TRecogerCilindro = 500;
     PLC_constants[0].TCaidaCaja = 750;          PLC_constants[1].TCaidaCaja = 750;
-    PLC_constants[0].CapacidadMuelle = 25;      PLC_constants[1].CapacidadMuelle = 10;
+    PLC_constants[0].CapacidadMuelle = 2;      PLC_constants[1].CapacidadMuelle = 2;
 
 
     ui->setupUi(this);
@@ -80,6 +80,7 @@ void MainWindow::onReadyRead()
             case C2S_SHORTS_TRAP_CODE: {
                 s -= C2S_SHORTS_TRAP_LEN;
                 C2S_parse_shorts_trap(packet, &(naves[clientIndex].plc_number));
+                checkCapacidadMuelle();
                 break;
             }
             case C2S_BOX_POSITION_REQUEST_CODE: {
@@ -120,6 +121,14 @@ void MainWindow::readBoxDestinations(const char* filename, short* box_dst_len, s
     for (int i = 0; i < *box_dst_len; i++) {
         fgets(buf, 16, fid);
         sscanf(buf, "%hd\n", &((*box_dst)[i]));
+    }
+}
+
+void MainWindow::checkCapacidadMuelle(void) {
+    for (int i = 0; i < this->numNaves; i++) {
+        for (int j = 0; j < 4; j++) {
+            naves[i].plc_bool[29 + j] = naves[i].plc_number.at(j) >= PLC_constants[i].CapacidadMuelle;
+        }
     }
 }
 

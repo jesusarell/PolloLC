@@ -5,7 +5,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-#define SERVER_PORT 53251
+#define SERVER_PORT 4242
 #define GLED_ON "background-color:rgb(0,255,0);border-radius:10;border:2px solid black"
 #define GLED_OFF "background-color:rgb(0,0,0);border-radius:10;border:2px solid rgb(0,255,0)"
 #define RLED_ON "background-color:rgb(255,0,0);border-radius:10;border:2px solid black"
@@ -53,6 +53,8 @@ private:
     const char* filenames[2] = {"../box_dst_1.txt", "../box_dst_2.txt"};
     EstadoNave naves[2];
     Visualization_PLC_Constants PLC_constants[2];
+
+    void checkCapacidadMuelle(void);
 
     void updateUI(void);
     void updateUI_1(void);

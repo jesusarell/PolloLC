@@ -27,8 +27,7 @@ bool Scadata::shouldRequestPosition(void) {
     bool newS0State = this->plcd->getBoolAt(0);
     bool changedToTrue = (newS0State && (newS0State != this->lastS0State));
     this->lastS0State = newS0State;
-//    return changedToTrue;
-    return true;
+    return changedToTrue;
 }
 
 void Scadata::requestNextPosition(void) {

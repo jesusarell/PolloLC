@@ -40,7 +40,7 @@ void PLCData::writeBoolAt(byte position, bool value) {
 void PLCData::writeNumberAt(byte position, short value) {
     byte* data = new byte[2];
     writeNumber(data, value, 0);
-        //Cli_MBWrite(client, position, 2, data);
+    Cli_MBWrite(client, position, 2, data);
     delete[] data;
 }
 void PLCData::decrementNumberAt(byte position) {
@@ -92,7 +92,7 @@ void PLCData::setPLCInitState(void) {
     //Tiempo caida de cajas
     writeNumber(initData, PLCData::TCaidaCaja, 42);
 
-        //Cli_MBWrite(client, 0, 50, initData);
+    Cli_MBWrite(client, 0, 50, initData);
     delete[] initData;
 }
 
@@ -105,7 +105,7 @@ inline void PLCData::writeNumber(byte* container, short number, int offset) {
     swapShort(container, offset);
 }
 inline void PLCData::writeBit(int srcbyte, int bit, bool on) {
-    //Cli_WriteArea(client, (int)S7AreaMK, 0, 8*srcbyte + bit, 1, S7WLBit, &on);
+    Cli_WriteArea(client, (int)S7AreaMK, 0, 8*srcbyte + bit, 1, S7WLBit, &on);
 }
 
 inline short PLCData::readShort(byte* container, int start_index) {
@@ -135,7 +135,7 @@ inline void PLCData::swapInt(byte* data, int start_index) {
 
 void PLCData::updatePLCState(void) {
     byte* read_data = new byte[15];
-    //Cli_MBRead(client, 0, 15, read_data);
+    Cli_MBRead(client, 0, 15, read_data);
 
     //Sensores de cintas y muelles
     this->plc_bool[0] = readBit(read_data, 0, 0);        //S0
