@@ -6,8 +6,8 @@
 #include "plcdata.h"
 
 #define SERVER_PORT 4242
-//#define SERVER_HOST "127.0.0.1"
-#define SERVER_HOST "172.18.67.196"
+#define SERVER_HOST "127.0.0.1"
+//#define SERVER_HOST "172.18.67.196"
 
 class Scadata : public QObject {
     Q_OBJECT

@@ -2,6 +2,16 @@
 #define PACKETS_H
 #include "plcdata.h"
 
+//Paquetes del protocolo
+// Header : 1byte code, 4 byte len, payload
+//  - estado bools : code 0x00, len n
+//      - Scinta, Motor, Cilindros (Empujando, Retrocediendo, Fuera, Dentro), Smuelle, X
+//  - estado muelles : code 0x01, len 2 * 4 = 8
+//      - muelle1, muelle2, muelle3, muelle4
+//  - request box position : code 0x02, len 0
+//  - enviar destino caja : code dec100 -> 0x64, len : 1
+//      - nº muelle destino
+
 const char C2S_BOOLS_TRAP_CODE = 0x00;
 const char C2S_SHORTS_TRAP_CODE = 0x01;
 const char C2S_BOX_POSITION_REQUEST_CODE = 0x02;
@@ -33,21 +43,3 @@ short S2C_parse_box_position_response(const char* packet);
 
 #endif // PACKETS_H
 
-
-//TODOLIST:
-    //Paquetes del protocolo
-    // Header : 1byte code, 4 byte len, payload
-    //  - estado bools : code 0x00, len n
-    //      - Scinta, Motor, Cilindros (Empujando, Retrocediendo, Fuera, Dentro), Smuelle, X
-    //  - estado muelles : code 0x01, len 2 * 4 = 8
-    //      - muelle1, muelle2, muelle3, muelle4
-    //  - request box position : code 0x02, len 0
-    //  - enviar destino caja : code dec100 -> 0x64, len : 1
-    //      - nº muelle destino
-
-    //Leer el fichero con los destinos de las cajas y utilizarlo para responder
-//Interfaz grafica
-//  Simular cajas moviendose --> ¡Jisus!
-
-//Mapear las variables del pcl a algo mas tragable --> Vic
-//Autentificacion y CIFRADO CON GILTZARRAPO --> Jisus

@@ -134,20 +134,6 @@ void C2S_parse_bools_trap(const char* packet, std::map<char, bool>* plc_bool) {
 }
 
 void C2S_parse_shorts_trap(const char* packet, std::map<char, short>* plc_number) {
-    /*
-    short m1, m2, m3, m4;
-
-    memcpy(&m1, packet + 5,  sizeof(short));
-    memcpy(&m2, packet + 7,  sizeof(short));
-    memcpy(&m3, packet + 9,  sizeof(short));
-    memcpy(&m4, packet + 11, sizeof(short));
-
-    (*plc_number)[0] = m1;
-    (*plc_number)[1] = m2;
-    (*plc_number)[2] = m3;
-    (*plc_number)[3] = m4;
-    */
-
     memcpy(&((*plc_number)[0]), packet + 5,  sizeof(short));
     memcpy(&((*plc_number)[1]), packet + 7,  sizeof(short));
     memcpy(&((*plc_number)[2]), packet + 9,  sizeof(short));

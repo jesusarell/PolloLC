@@ -20,6 +20,7 @@ public:
     void updateBoxLocation(short position);
     void addOnRefreshCallback(std::function<void(void)> _onRefresh);
 
+
     //Tiempos en ms
     static const int TSensorMuelle = 750;
     static const int TSensorCinta = 750;
@@ -30,7 +31,7 @@ public:
     static const int TCaidaCaja = 750;
 
     //Capacidad en unidades
-    static const short CapacidadMuelle = 2;
+    static const short CapacidadMuelle = 25;
 
     //Tiempo entre actualizaciones de memoria en ms
     static const int TEntreLecturas = 100;

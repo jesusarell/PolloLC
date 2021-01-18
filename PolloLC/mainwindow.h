@@ -30,14 +30,14 @@ private:
     PLCData* plcd;
     Scadata* scad;
 
-    QTimer* animation_timer;
-    int frameRate = 60;
+    //QTimer* animation_timer;
+    //int frameRate = 60;
 
 private slots:
     void updatePLCState(void);
     void update_UI_1(void);
-    void update_UI_2(void);
-    void update_animations(void);
+//    void update_UI_2(void);
+//    void update_animations(void);
 
     void decrementM1OnClick(void);
     void decrementM2OnClick(void);

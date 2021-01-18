@@ -48,7 +48,6 @@ void Scadata::sendTraps() {
     C2S_shorts_trap(short_trap, this->plcd);
 
     socket.write(bool_trap, C2S_BOOLS_TRAP_LEN);
-    socket.flush();
     socket.write(short_trap, C2S_SHORTS_TRAP_LEN);
     socket.flush();
 

@@ -9,9 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , plcd(new PLCData())
-    , animation_timer(new QTimer(this))
+//    , animation_timer(new QTimer(this))
 {
     ui->setupUi(this);
+    ui->tabWidget->setTabEnabled(1, false);
+
     scad = new Scadata(plcd);
     plcd->addOnRefreshCallback(std::bind(&MainWindow::updatePLCState, this));
 
@@ -20,8 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->ui->decrementM3, SIGNAL(pressed()), this, SLOT(decrementM3OnClick()));
     connect(this->ui->decrementMD, SIGNAL(pressed()), this, SLOT(decrementMDOnClick()));
 
-    connect(this->animation_timer, SIGNAL(timeout()), this, SLOT(update_animations()));
-    this->animation_timer->start((int) 1000 * 2 / this->frameRate);
+    //connect(this->animation_timer, SIGNAL(timeout()), this, SLOT(update_animations()));
+    //this->animation_timer->start((int) 1000 * 2 / this->frameRate);
 }
 
 MainWindow::~MainWindow()
@@ -36,7 +38,7 @@ void MainWindow::decrementMDOnClick(void) { plcd->decrementNumberAt(3); }
 
 void MainWindow::updatePLCState(void) {
     this->update_UI_1();
-    this->update_UI_2();
+//    this->update_UI_2();
 }
 
 void MainWindow::update_UI_1(void) {
@@ -83,13 +85,13 @@ void MainWindow::update_UI_1(void) {
     this->ui->CajasMuelleD->setText(QString::number(plcd->getNumberAt(3)));
 }
 
-void MainWindow::update_UI_2(void) {
-}
+//void MainWindow::update_UI_2(void) {
+//}
 
-void MainWindow::update_animations(void) {
-    QWidget* ml = (QWidget*) this->ui->v_ml1;
-    QPoint p = ml->pos();
+//void MainWindow::update_animations(void) {
+//    QWidget* ml = (QWidget*) this->ui->v_ml1;
+//    QPoint p = ml->pos();
 
-    int x = ((p.x() - 1) <= 790) ? 1025 : (p.x() - 1);
-    ml->move(x, p.y());
-}
+//    int x = ((p.x() - 1) <= 790) ? 1025 : (p.x() - 1);
+//    ml->move(x, p.y());
+//}

@@ -8,28 +8,31 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , _server(this)
 {
-    PLC_constants[0].TSensorMuelle = 750;       PLC_constants[1].TSensorMuelle = 750;
-    PLC_constants[0].TSensorCinta = 750;        PLC_constants[1].TSensorCinta = 750;
-    PLC_constants[0].TCinta0 = 500;             PLC_constants[1].TCinta0 = 3000;
-    PLC_constants[0].TCintas = 1500;            PLC_constants[1].TCintas = 2000;
-    PLC_constants[0].TSalidaCilindro = 500;     PLC_constants[1].TSalidaCilindro = 500;
-    PLC_constants[0].TRecogerCilindro = 500;    PLC_constants[1].TRecogerCilindro = 500;
-    PLC_constants[0].TCaidaCaja = 750;          PLC_constants[1].TCaidaCaja = 750;
-    PLC_constants[0].CapacidadMuelle = 2;      PLC_constants[1].CapacidadMuelle = 2;
+    PLC_constants[0].TSensorMuelle = 750;         PLC_constants[1].TSensorMuelle = 0;
+    PLC_constants[0].TSensorCinta = 750;          PLC_constants[1].TSensorCinta = 750;
+    PLC_constants[0].TCinta0 = 500;               PLC_constants[1].TCinta0 = 3000;
+    PLC_constants[0].TCintas = 1500;              PLC_constants[1].TCintas = 2000;
+    PLC_constants[0].TSalidaCilindro = 500;       PLC_constants[1].TSalidaCilindro = 500;
+    PLC_constants[0].TRecogerCilindro = 500;      PLC_constants[1].TRecogerCilindro = 500;
+    PLC_constants[0].TCaidaCaja = 750;            PLC_constants[1].TCaidaCaja = 0;
+    PLC_constants[0].CapacidadMuelle = 25;        PLC_constants[1].CapacidadMuelle = 2;
 
 
     ui->setupUi(this);
+    ui->tabWidget->setTabEnabled(3, false);
+
 
     for (int i = 0; i < numNaves; i++) {
         this->readBoxDestinations(filenames[i], &(naves[i].box_dst_len), &(naves[i].box_dst));
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncR_pbar").arg(QString::number(i + 1)))->setMaximum(naves[i].box_dst_len);
 
-       for (char j = 0; j < 33; j++) {
-            naves[i].plc_bool.insert(std::make_pair(j, false));
-        }
+        for (char j = 0; j < 33; j++) naves[i].plc_bool.insert(std::make_pair(j, false));
+        for (char j = 0; j < 4; j++) naves[i].plc_number.insert(std::make_pair(j, 0));
 
-        for (char j = 0; j < 4; j++) {
-            naves[i].plc_number.insert(std::make_pair(j, 0));
-        }
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM1_pbar").arg(QString::number(i + 1)))->setMaximum(PLC_constants[i].CapacidadMuelle);
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM2_pbar").arg(QString::number(i + 1)))->setMaximum(PLC_constants[i].CapacidadMuelle);
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM3_pbar").arg(QString::number(i + 1)))->setMaximum(PLC_constants[i].CapacidadMuelle);
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM4_pbar").arg(QString::number(i + 1)))->setMaximum(PLC_constants[i].CapacidadMuelle);
     }
     this->updateUI();
 
@@ -80,7 +83,6 @@ void MainWindow::onReadyRead()
             case C2S_SHORTS_TRAP_CODE: {
                 s -= C2S_SHORTS_TRAP_LEN;
                 C2S_parse_shorts_trap(packet, &(naves[clientIndex].plc_number));
-                checkCapacidadMuelle();
                 break;
             }
             case C2S_BOX_POSITION_REQUEST_CODE: {
@@ -133,8 +135,10 @@ void MainWindow::checkCapacidadMuelle(void) {
 }
 
 void MainWindow::updateUI(void) {
+    this->checkCapacidadMuelle();
     this->updateUI_1();
     this->updateUI_23();
+    QApplication::processEvents();
 }
 void MainWindow::updateUI_1(void) {
     for (int i = 0; i < this->numNaves; i++) {
@@ -142,22 +146,31 @@ void MainWindow::updateUI_1(void) {
             QString::number(naves[i].box_dst_len - naves[i].box_count),
             QString::number(naves[i].box_dst_len)
         ));
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncR_pbar").arg(QString::number(i + 1)))->setValue(naves[i].box_dst_len - naves[i].box_count);
+
         this->ui->Resumen->findChild<QLabel*>(QString("n%1_ncM1").arg(QString::number(i + 1)))->setText(QString("%1/%2").arg(
             QString::number(naves[i].plc_number.at(0)),
             QString::number(PLC_constants[i].CapacidadMuelle)
         ));
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM1_pbar").arg(QString::number(i + 1)))->setValue(naves[i].plc_number.at(0));
+
         this->ui->Resumen->findChild<QLabel*>(QString("n%1_ncM2").arg(QString::number(i + 1)))->setText(QString("%1/%2").arg(
             QString::number(naves[i].plc_number.at(1)),
             QString::number(PLC_constants[i].CapacidadMuelle)
         ));
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM2_pbar").arg(QString::number(i + 1)))->setValue(naves[i].plc_number.at(1));
+
         this->ui->Resumen->findChild<QLabel*>(QString("n%1_ncM3").arg(QString::number(i + 1)))->setText(QString("%1/%2").arg(
             QString::number(naves[i].plc_number.at(2)),
             QString::number(PLC_constants[i].CapacidadMuelle)
         ));
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM3_pbar").arg(QString::number(i + 1)))->setValue(naves[i].plc_number.at(2));
+
         this->ui->Resumen->findChild<QLabel*>(QString("n%1_ncM4").arg(QString::number(i + 1)))->setText(QString("%1/%2").arg(
             QString::number(naves[i].plc_number.at(3)),
             QString::number(PLC_constants[i].CapacidadMuelle)
         ));
+        this->ui->Resumen->findChild<QProgressBar*>(QString("n%1_ncM4_pbar").arg(QString::number(i + 1)))->setValue(naves[i].plc_number.at(3));
     }
 }
 
@@ -193,14 +206,14 @@ void MainWindow::updateUI_23(void) {
         qw->findChild<QFrame*>(QString("n%1_M3").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(23) ? GLED_ON : GLED_OFF);
         qw->findChild<QFrame*>(QString("n%1_M4").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(24) ? GLED_ON : GLED_OFF);
 
-        qw->findChild<QFrame*>(QString("n%1_M1AceptarProximaCaja").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(25) ? GLED_ON : GLED_OFF);
-        qw->findChild<QFrame*>(QString("n%1_M2AceptarProximaCaja").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(26) ? GLED_ON : GLED_OFF);
-        qw->findChild<QFrame*>(QString("n%1_M3AceptarProximaCaja").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(27) ? GLED_ON : GLED_OFF);
-        qw->findChild<QFrame*>(QString("n%1_DestinoCajaConocido").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(28) ? GLED_ON : GLED_OFF);
-        qw->findChild<QFrame*>(QString("n%1_M1Lleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(29) ? GLED_ON : GLED_OFF);
-        qw->findChild<QFrame*>(QString("n%1_M2Lleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(30) ? GLED_ON : GLED_OFF);
-        qw->findChild<QFrame*>(QString("n%1_M3Lleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(31) ? GLED_ON : GLED_OFF);
-        qw->findChild<QFrame*>(QString("n%1_MDLleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(32) ? GLED_ON : GLED_OFF);
+        //qw->findChild<QFrame*>(QString("n%1_M1AceptarProximaCaja").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(25) ? GLED_ON : GLED_OFF);
+        //qw->findChild<QFrame*>(QString("n%1_M2AceptarProximaCaja").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(26) ? GLED_ON : GLED_OFF);
+        //qw->findChild<QFrame*>(QString("n%1_M3AceptarProximaCaja").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(27) ? GLED_ON : GLED_OFF);
+        //qw->findChild<QFrame*>(QString("n%1_DestinoCajaConocido").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(28) ? GLED_ON : GLED_OFF);
+        qw->findChild<QFrame*>(QString("n%1_M1Lleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(29) ? RLED_ON : RLED_OFF);
+        qw->findChild<QFrame*>(QString("n%1_M2Lleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(30) ? RLED_ON : RLED_OFF);
+        qw->findChild<QFrame*>(QString("n%1_M3Lleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(31) ? RLED_ON : RLED_OFF);
+        qw->findChild<QFrame*>(QString("n%1_MDLleno").arg(QString::number(i + 1)))->setStyleSheet(naves[i].plc_bool.at(32) ? RLED_ON : RLED_OFF);
 
         qw->findChild<QLabel*>(QString("n%1_CajasMuelle1").arg(QString::number(i + 1)))->setText(QString::number(naves[i].plc_number.at(0)));
         qw->findChild<QLabel*>(QString("n%1_CajasMuelle2").arg(QString::number(i + 1)))->setText(QString::number(naves[i].plc_number.at(1)));

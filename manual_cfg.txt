@@ -1,0 +1,19 @@
+Comun
+	plcdata.h:
+		- Variables del PLC
+		- Tiempo entre lecturas al PLC
+		- IP del PLC
+
+Scada/
+	mainwindow.h:
+		- Puerto del servidor TCP
+		- Numero de muelles
+		- Nombres de los ficheros
+
+	mainwindow.cpp:
+		- Variables de los PLCs
+
+PolloLC/
+	scadata.h:
+		- Puerto del Servidor TCP
+		- Direccion IP del servidor TCP
